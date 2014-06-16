@@ -18,4 +18,6 @@ def entries():
         #quick hack for date nonsense
         request.json['created_date'] =  datetime.strptime(created, "%Y-%m-%d")
         entry = mint.create_entry(request.json)
+        print "Entry"
+        print entry
         return "200"
