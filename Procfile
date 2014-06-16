@@ -1,1 +1,1 @@
-web: gunicorn -k eventlet systemofrecord.server:app
+web: gunicorn -k eventlet themint.server:app

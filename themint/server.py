@@ -4,7 +4,7 @@ from datetime import datetime
 
 from .mint import Mint
 
-from systemofrecord import app, mongo
+from themint import app, mongo
 
 mint = Mint(mongo)
 
