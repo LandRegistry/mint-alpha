@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="row">
+
+    <div class="col-md-12">
+      <p>Land Registry &mdash; Mint</p>
+      <p class="text-muted">For now, just a single title</p>
+
+      {% if entries %}
+      {% for entry in entries %}
+        <h2>The entry</h2>
+        <p>{{entry}}</p>
+      {% endfor %}
+      {% else %}
+      <p class="text-muted">No entries</p>
+      {% endif %}
+
+      <form action="/entries" method="POST">
+        <textarea name="payload" cols="200" rows="10">{"id":"be4bcd79-1243-4d39-bfac-e59e3b78b008","foo":"bar"}</textarea>
+        <input type="submit">
+      </form>
+    </div>
+
+
+
+  </div>
+{% endblock %}

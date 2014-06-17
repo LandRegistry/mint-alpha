@@ -23,14 +23,15 @@ class Mint(object):
         # get current title from DB using title ID from incoming json
         print "Entry.id in create_entry"
         print new_entry_json['id']
+        # TODO find latest, otherwise "previous" will always point to v1
         current_entry = self.db.db.entries.find_one({"id": new_entry_json['id']})
 
         # add link between incoming and current and then
         if current_entry:
-            current_entry_hash = current_entry['md5sum']
+            current_entry_hash = current_entry['sha256']
             new_entry_json['previous'] = current_entry_hash
 
         # hash and sign contents of incoming and save
-        new_entry_json['md5sum'] = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(16))
+        new_entry_json['sha256'] = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(16))
         self.db.db.entries.save(new_entry_json)
         new_entry_json

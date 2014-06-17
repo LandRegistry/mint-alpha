@@ -1,6 +1,7 @@
 from flask import json, request, make_response
+from flask.ext.pushrod import pushrod_view
 from bson import json_util
-from datetime import datetime
+from datetime import date, datetime
 
 from .mint import Mint
 
@@ -8,16 +9,26 @@ from themint import app, mongo
 
 mint = Mint(mongo)
 
-@app.route('/entries', methods=['GET','POST'])
-def entries():
-    if request.method == 'GET':
-          db_entries = mongo.db.entries.find()
-          return json.dumps(list(db_entries), default=json_util.default)
+@app.route('/entries', methods=['GET'])
+@pushrod_view(jinja_template='entry.html')
+def get_entries():
+    entries = mongo.db.entries.find()
+    body = json.dumps(list(entries), default=json_util.default)
+    return {"entries" : json.loads(body) }
+
+@app.route('/entries', methods=['POST'])
+def create_entries():
+    payload = {}
+    if request.headers['Content-Type'] == 'application/x-www-form-urlencoded':
+        pl = request.form['payload']
+        print "PAYLOAD"
+        print pl
+        payload = json.loads(request.form['payload'])
     else:
-        created = request.json['created_date']
-        #quick hack for date nonsense
-        request.json['created_date'] =  datetime.strptime(created, "%Y-%m-%d")
-        entry = mint.create_entry(request.json)
-        print "Entry"
-        print entry
-        return "200"
+        # request.json['created_date'] =  date.today()
+        payload = request.json # this has the payload, id, etc
+
+    payload['created_date'] = str(date.today())
+
+    entry = mint.create_entry(payload)
+    return "200"
