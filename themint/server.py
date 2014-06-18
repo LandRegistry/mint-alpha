@@ -12,11 +12,11 @@ db = SystemOfRecord(app.config)
 mint = Mint(db)
 
 @app.route('/titles', methods=['GET'])
+@app.route('/titles/<number>', methods=['GET'])
 @pushrod_view(jinja_template='titles.html')
-def get():
-    titles = {} # TODO ask systemofrecord
-    body = json.dumps(list(titles), default=json_util.default)
-    return {"titles" : json.loads(body) }
+def get(number=None):
+    titles = db.get(number)
+    return {"titles" : [titles] }
 
 @app.route('/titles', methods=['POST'])
 def post():
@@ -28,5 +28,9 @@ def post():
 
     payload['created_ts'] = unixts()
 
-    response = mint.create(payload)
-    return json.dumps(response.json())
+    r = mint.create(payload)
+
+    if request.headers['Content-Type'] == 'application/x-www-form-urlencoded':
+        return redirect("/titles", code=302)
+    else:
+        return r.text, r.status_code
