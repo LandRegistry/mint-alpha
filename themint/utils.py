@@ -2,8 +2,9 @@ from collections import OrderedDict
 from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
 from Crypto import Random
-
 import json
+import calendar
+import datetime
 
 def alphabetically_sorted_dict(d):
     """
@@ -42,3 +43,6 @@ def load_keys(public_file, private_file):
     private_key = RSA.importKey(key_file)
     key_file.close()
     return (public_key, private_key)
+
+def unixts():
+    return calendar.timegm(datetime.datetime.utcnow().timetuple())

@@ -9,7 +9,6 @@ greenlet==0.4.2
 gunicorn==18.0
 itsdangerous==0.24
 pycrypto==2.6.1
-pymongo==2.7.1
 wsgiref==0.1.2
-Flask-PyMongo==0.3.0
 Flask-Pushrod==0.2.dev
+requests==2.3.0

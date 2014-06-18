@@ -13,25 +13,24 @@ class Mint(object):
             self.public_key, self.private_key = create_keys()
 
     def __sign(self, hash, key):
-        return self.private_key.sign(hash,'')
+        # TODO implement signing
+        # return self.private_key.sign(hash,'')
+        return ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(32))
 
     def __verify(self, original_data, signed):
         original_hashed = SHA256.new(original_data).hexdigest()
         return self.public_key.verify(original_hashed, signed)
 
-    def create_entry(self, new_entry_json):
-        # get current title from DB using title ID from incoming json
-        print "Entry.id in create_entry"
-        print new_entry_json['id']
-        # TODO find latest, otherwise "previous" will always point to v1
-        current_entry = self.db.db.entries.find_one({"id": new_entry_json['id']})
+    def create(self, json_data, previous_hash=None):
+        """Signs a payload, then posts it to systemofrecord."""
 
-        # add link between incoming and current and then
-        if current_entry:
-            current_entry_hash = current_entry['sha256']
-            new_entry_json['previous'] = current_entry_hash
+        # reference to previous hash, if it exists
+        if previous_hash:
+            json_data['previous_sha256'] = previous_hash
 
-        # hash and sign contents of incoming and save
-        new_entry_json['sha256'] = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(16))
-        self.db.db.entries.save(new_entry_json)
-        new_entry_json
+        # sign the payload
+        signed = self.__sign(json_data, None)
+        json_data['sha256'] = signed
+        return self.db.put(json_data)
+
+        return new_json

@@ -6,22 +6,20 @@
       <p>Land Registry &mdash; Mint</p>
       <p class="text-muted">For now, just a single title</p>
 
-      {% if entries %}
-      {% for entry in entries %}
-        <h2>The entry</h2>
-        <p>{{entry}}</p>
+      {% if titles %}
+      {% for title in titles %}
+        <h2>Title</h2>
+        <p>{{title}}</p>
       {% endfor %}
       {% else %}
-      <p class="text-muted">No entries</p>
+      <p class="text-muted">No titles</p>
       {% endif %}
 
-      <form action="/entries" method="POST">
-        <textarea name="payload" cols="200" rows="10">{"id":"be4bcd79-1243-4d39-bfac-e59e3b78b008","foo":"bar"}</textarea>
+      <form action="/titles" method="POST">
+        <textarea name="payload" cols="200" rows="10">{"title_number":"THX1138","foo":"bar"}</textarea>
         <input type="submit">
       </form>
     </div>
-
-
 
   </div>
 {% endblock %}

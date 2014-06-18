@@ -1,14 +1,16 @@
-import os
+import os, sys
 from flask import Flask
 from flask.ext.basicauth import BasicAuth
-from flask.ext.pymongo import PyMongo
 from flask.ext.pushrod import Pushrod
 
 app = Flask(__name__)
-mongo = PyMongo(app)
 Pushrod(app)
 
-# add mongo config
+# add config
+app.config.from_object('config')
+if not os.environ.get('SYSTEMOFRECORD_URL'):
+    print "Required environment variable not set: SYSTEMOFRECORD_URL"
+    sys.exit(-1)
 
 # auth
 if os.environ.get('BASIC_AUTH_USERNAME'):

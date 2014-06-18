@@ -1,34 +1,32 @@
-from flask import json, request, make_response
+from flask import json, request, make_response, redirect
 from flask.ext.pushrod import pushrod_view
 from bson import json_util
 from datetime import date, datetime
-
+from .utils import unixts
+from .systemofrecord import SystemOfRecord
 from .mint import Mint
 
-from themint import app, mongo
+from themint import app
 
-mint = Mint(mongo)
+db = SystemOfRecord(app.config)
+mint = Mint(db)
 
-@app.route('/entries', methods=['GET'])
-@pushrod_view(jinja_template='entry.html')
-def get_entries():
-    entries = mongo.db.entries.find()
-    body = json.dumps(list(entries), default=json_util.default)
-    return {"entries" : json.loads(body) }
+@app.route('/titles', methods=['GET'])
+@pushrod_view(jinja_template='titles.html')
+def get():
+    titles = {} # TODO ask systemofrecord
+    body = json.dumps(list(titles), default=json_util.default)
+    return {"titles" : json.loads(body) }
 
-@app.route('/entries', methods=['POST'])
-def create_entries():
+@app.route('/titles', methods=['POST'])
+def post():
     payload = {}
     if request.headers['Content-Type'] == 'application/x-www-form-urlencoded':
-        pl = request.form['payload']
-        print "PAYLOAD"
-        print pl
         payload = json.loads(request.form['payload'])
     else:
-        # request.json['created_date'] =  date.today()
         payload = request.json # this has the payload, id, etc
 
-    payload['created_date'] = str(date.today())
+    payload['created_ts'] = unixts()
 
-    entry = mint.create_entry(payload)
-    return "200"
+    title = mint.create(payload)
+    return redirect("/titles", code=302)
