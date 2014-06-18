@@ -28,5 +28,5 @@ def post():
 
     payload['created_ts'] = unixts()
 
-    title = mint.create(payload)
-    return redirect("/titles", code=302)
+    response = mint.create(payload)
+    return json.dumps(response.json())

@@ -32,5 +32,3 @@ class Mint(object):
         signed = self.__sign(json_data, None)
         json_data['sha256'] = signed
         return self.db.put(json_data)
-
-        return new_json

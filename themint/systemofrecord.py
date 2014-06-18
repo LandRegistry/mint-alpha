@@ -1,4 +1,5 @@
 import requests
+import json
 
 class SystemOfRecord(object):
 
@@ -8,5 +9,8 @@ class SystemOfRecord(object):
     def put(self, signed_json_data):
         """payload requires sha256 and public key, although
         I'm currently not sure if validation should be done here."""
-        r = requests.post(self.systemofrecord_url, data=signed_json_data)
-        return r.status_code
+
+        headers = { "Content-Type" : "application/json"}
+        data = json.dumps(signed_json_data)
+        response = requests.post(self.systemofrecord_url + "/entries", data=data, headers=headers)
+        return response
