@@ -3,41 +3,59 @@
 
 Service to create new versions of a title, hashed and signed.
 
+Takes a document of the form:
+
+    {
+        "address": "1 low street",
+        "title_number": "TN1234567",
+        "previous_sha256" : "<excluded for v1 of title>"
+        /* ... */
+    }
+
+...signs it with a private key, and turns it into:
+
+    {
+        "title" : {
+            "address": "1 low street",
+            "title_number": "TN1234567",
+            "previous_sha256" : "<excluded for v1 of title>"
+             /* ... */
+        },
+        "sha256": "<the hash of canonicalised .title field above>",
+        "public_key": "<key or link to key>"
+    }
+
+...before posting it to the [System Of Record](https://github.com/landregistry/system-of-record).
+
 # Get started
 
+Run the server
+
     ./manage.py runserver
+
+Post a title
+
     curl -X POST -H 'Content-Type: application/json' http://0.0.0.0:5000/entries \
-        -d '{"id":"'$(uuidgen)'","created_date":"'$(date +%Y-%m-%d)'"}'
-    curl http://0.0.0.0:5000/entries
-    # Record the 'id' of the entry, and use it to update the newly-created entry, e.g. 'be4bcd79-1243-4d39-bfac-e59e3b78b008'
-    curl -X POST -H 'Content-Type: application/json' http://0.0.0.0:5000/entries \
-        -d '{"id":"be4bcd79-1243-4d39-bfac-e59e3b78b008","created_date":"'$(date +%Y-%m-%d)'"}'
+        -d '{
+        "address": "1 low street",
+        "title_number": "TN1234567",
+        "previous_sha256" : "<excluded for v1 of title>"
+        }'
+
+Check that the title has been successfully added:
+
     curl http://0.0.0.0:5000/entries
 
-Yields:
+Post an update to the title, e.g. new ownership:
 
-```
-[
-   {
-      "_id":{
-         "$oid":"539ef81b2e4733688f58c3d3"
-      },
-      "created_date":{
-         "$date":1402876800000
-      },
-      "id":"be4bcd79-1243-4d39-bfac-e59e3b78b008",
-      "md5sum":"hqskqrp2iru249az"
-   },
-   {
-      "_id":{
-         "$oid":"539ef9882e47336a0240cb02"
-      },
-      "created_date":{
-         "$date":1402876800000
-      },
-      "id":"be4bcd79-1243-4d39-bfac-e59e3b78b008",
-      "md5sum":"2xhy01opkf9dtdfm",
-      "previous":"hqskqrp2iru249az"
-   }
-]
-```
+    curl -X POST -H 'Content-Type: application/json' http://0.0.0.0:5000/entries \
+        -d '{
+        "owner": "the name of the new owner"
+        "address": "1 low street",
+        "title_number": "TN1234567",
+        "previous_sha256" : "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }'
+
+Verify the new entry:
+
+    curl http://0.0.0.0:5000/entries
