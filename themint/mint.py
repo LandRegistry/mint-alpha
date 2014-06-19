@@ -40,7 +40,7 @@ class Mint(object):
         doc = self.db.get(title_number)
         if doc:
             previous_json = json.loads(doc)
-            title = previous_json['title']
+            title = previous_json[title_number]['title']
             print "DIFF"
             print diff(title, json_data)
         else:
