@@ -4,6 +4,11 @@ from .utils import load_keys, create_keys, sha256_sum, unixts
 import string
 import random
 import json
+import pickle
+from .audit import Audit
+from themint import app
+
+audit = Audit(app.config)
 
 class Mint(object):
 
@@ -41,8 +46,8 @@ class Mint(object):
         if doc:
             previous_json = json.loads(doc)
             title = previous_json[title_number]['title']
-            print "DIFF"
-            print diff(title, json_data)
+            thediff = diff(title, json_data)
+            #pickled_diff = pickle.dump
         else:
             print "NO PREVIOUS VERSION FOR %s" % title_number
         # TODO finish this
@@ -70,4 +75,6 @@ class Mint(object):
             "public_key" : str(self.public_key),
             "created_ts" : unixts()
         }
-        return self.db.put(signed)
+        resp = self.db.put(signed)
+        # TODO audit.log response, and diff
+        return resp
