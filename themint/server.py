@@ -2,7 +2,6 @@ from flask import json, request, make_response, redirect
 from flask.ext.pushrod import pushrod_view
 from bson import json_util
 from datetime import date, datetime
-from .utils import unixts
 from .systemofrecord import SystemOfRecord
 from .mint import Mint
 
@@ -26,8 +25,7 @@ def post():
     else:
         payload = request.json # this has the payload, id, etc
 
-    payload['created_ts'] = unixts()
-
+    mint.diff_with_previous(payload)
     r = mint.create(payload)
 
     if request.headers['Content-Type'] == 'application/x-www-form-urlencoded':

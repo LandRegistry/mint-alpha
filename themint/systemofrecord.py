@@ -10,7 +10,10 @@ class SystemOfRecord(object):
     def get(self, number=None):
         if number:
             response = requests.get(self.api + "/" + number)
-            return json.dumps(response.json())
+            try:
+                return json.dumps(response.json())
+            except ValueError as e:
+                return None
         else:
             # TODO get a collection of titles
             return {"not yet implemented" : 501}

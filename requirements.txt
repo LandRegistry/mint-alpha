@@ -12,3 +12,4 @@ pycrypto==2.6.1
 wsgiref==0.1.2
 Flask-Pushrod==0.2.dev
 requests==2.3.0
+datadiff==1.1.5

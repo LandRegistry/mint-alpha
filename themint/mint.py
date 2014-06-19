@@ -1,7 +1,9 @@
 from Crypto.Hash import SHA256
-from .utils import load_keys, create_keys, sha256_sum
+from datadiff import diff
+from .utils import load_keys, create_keys, sha256_sum, unixts
 import string
 import random
+import json
 
 class Mint(object):
 
@@ -23,6 +25,29 @@ class Mint(object):
         original_hashed = SHA256.new(original_data).hexdigest()
         return self.public_key.verify(original_hashed, signed)
 
+    def diff_with_previous(self, json_data):
+        """
+        Accept JSON data; extract the title_number;
+        Get the last known version for said title_number;
+        Post to systemofrecord.
+        Create datadiff between old and new version.
+        Send datadiff + response status code + response status message
+        to the audit service.
+        (my suggestion for  audit log messages is to just drop them onto
+        a queue for now).
+        """
+        title_number = json_data['title_number']
+        doc = self.db.get(title_number)
+        if doc:
+            previous_json = json.loads(doc)
+            title = previous_json['title']
+            print "DIFF"
+            print diff(title, json_data)
+        else:
+            print "NO PREVIOUS VERSION FOR %s" % title_number
+        # TODO finish this
+        pass
+
     def create(self, json_data, previous_hash=None):
         """Signs a payload, then posts it to systemofrecord."""
 
@@ -42,7 +67,7 @@ class Mint(object):
             "title" : json_data,
             "title_number" : json_data['title_number'],
             "sha256" : str(encrypted_sum[0]),
-            "public_key" : str(self.public_key)
+            "public_key" : str(self.public_key),
+            "created_ts" : unixts()
         }
-        print signed
         return self.db.put(signed)
