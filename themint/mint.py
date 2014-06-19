@@ -12,10 +12,12 @@ class Mint(object):
         else:
             self.public_key, self.private_key = create_keys()
 
-    def __sign(self, hash, key):
+    def __sign(self, clear_text, key=None):
         # TODO implement signing
-        # return self.private_key.sign(hash,'')
-        return ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(32))
+        if not key:
+            key = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(32))
+        cipher_text = self.private_key.sign(clear_text,key)
+        return cipher_text
 
     def __verify(self, original_data, signed):
         original_hashed = SHA256.new(original_data).hexdigest()
@@ -32,11 +34,15 @@ class Mint(object):
         canonical_json = str(json_data)
 
         # sign the payload
-        sum = sha256_sum(canonical_json)
+        sha_sum = sha256_sum(canonical_json)
+
+        # encrypt the sum
+        encrypted_sum = self.__sign(sha_sum)
         signed = {
             "title" : json_data,
             "title_number" : json_data['title_number'],
-            "sha256" : sum,
+            "sha256" : str(encrypted_sum[0]),
             "public_key" : str(self.public_key)
         }
+        print signed
         return self.db.put(signed)
