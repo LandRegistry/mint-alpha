@@ -4,10 +4,11 @@ from bson import json_util
 from datetime import date, datetime
 from .systemofrecord import SystemOfRecord
 from .mint import Mint
-
 from themint import app
+from .audit import Audit
 
 db = SystemOfRecord(app.config)
+audit = Audit(app.config, db)
 mint = Mint(db)
 
 @app.route('/titles', methods=['GET'])
@@ -25,9 +26,10 @@ def post():
     else:
         payload = request.json # this has the payload, id, etc
 
-    mint.diff_with_previous(payload)
     r = mint.create(payload)
-    audit.log(foo="bar")
+
+    audit.log(r.text, r.status_code, payload)
+
     if request.headers['Content-Type'] == 'application/x-www-form-urlencoded':
         return redirect("/titles", code=302)
     else:

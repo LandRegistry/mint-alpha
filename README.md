@@ -59,3 +59,22 @@ Post an update to the title, e.g. new ownership:
 Verify the new entry:
 
     curl http://0.0.0.0:5000/entries
+
+
+# Audit
+
+The audit trail gets logged out to ```audit.log``` currently, and a sample successful edit would be logged like this:
+
+```
+Audit start 1403519208
+Message: OK
+Status code: 200
+Diff:
+--- a
++++ b
+{
+ u'title_number': u'THX015',
+ u'foo': u'bar55',
+}
+Audit end 1403519208
+```
