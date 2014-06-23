@@ -8,7 +8,7 @@ Pushrod(app)
 
 # add config
 app.config.from_object('config')
-if not os.environ.get('SYSTEMOFRECORD_URL'):
+if app.config['SYSTEMOFRECORD_URL'] == '':
     print "Required environment variable not set: SYSTEMOFRECORD_URL"
     sys.exit(-1)
 
