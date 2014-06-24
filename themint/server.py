@@ -1,6 +1,5 @@
 from flask import json, request, make_response, redirect
 from flask.ext.pushrod import pushrod_view
-from bson import json_util
 from datetime import date, datetime
 from .systemofrecord import SystemOfRecord
 from .mint import Mint
