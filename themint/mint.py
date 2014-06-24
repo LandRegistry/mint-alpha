@@ -4,18 +4,19 @@ import string
 import random
 import json
 from themint import app
+from .audit import Audit
 
 class Mint(object):
 
     def __init__(self, db, public_key = None, private_key = None):
         self.db = db
+        self.audit = Audit(app.config, db)
         if public_key and private_key:
             self.public_key, self.private_key = load_keys(public_key, private_key)
         else:
             self.public_key, self.private_key = create_keys()
 
     def __sign(self, clear_text, key=None):
-        # TODO implement signing
         if not key:
             key = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(32))
         cipher_text = self.private_key.sign(clear_text,key)
@@ -30,8 +31,15 @@ class Mint(object):
         """Signs a payload, then posts it to systemofrecord."""
 
         # reference to previous hash, if it exists
+        last = None
         if previous_hash:
             json_data['previous_sha256'] = previous_hash
+        else:
+            # get the sha256_hash of the previous entry
+            last = self.db.get()
+            if last:
+                print "LAST TITLE", last
+
 
         # TODO canonicalise the payload
         canonical_json = str(json_data)
@@ -49,5 +57,7 @@ class Mint(object):
             "created_ts" : unixts()
         }
         resp = self.db.put(signed)
-        # TODO audit.log response, and diff
+
+        self.audit.log(resp.text, resp.status_code, json_data, last)
+
         return resp

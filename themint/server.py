@@ -4,17 +4,16 @@ from datetime import date, datetime
 from .systemofrecord import SystemOfRecord
 from .mint import Mint
 from themint import app
-from .audit import Audit
 
 db = SystemOfRecord(app.config)
-audit = Audit(app.config, db)
 mint = Mint(db)
 
 @app.route('/titles', methods=['GET'])
 @app.route('/titles/<number>', methods=['GET'])
 @pushrod_view(jinja_template='titles.html')
 def get(number=None):
-    titles = db.get(number)
+    # TODO /titles/<number> on systemofrecord was removed
+    titles = db.get()
     return {"titles" : [titles] }
 
 @app.route('/titles', methods=['POST'])
@@ -27,7 +26,7 @@ def post():
 
     r = mint.create(payload)
 
-    audit.log(r.text, r.status_code, payload)
+
 
     if request.headers['Content-Type'] == 'application/x-www-form-urlencoded':
         return redirect("/titles", code=302)
