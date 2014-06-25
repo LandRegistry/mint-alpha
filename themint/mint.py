@@ -36,10 +36,11 @@ class Mint(object):
             json_data['previous_sha256'] = previous_hash
         else:
             # get the sha256_hash of the previous entry
-            last = self.db.get()
-            if last:
-                print "LAST TITLE", last
-
+            last_resp = self.db.get()
+            try:
+                last = last_resp.json()
+            except ValueError:
+                pass
 
         # TODO canonicalise the payload
         canonical_json = str(json_data)

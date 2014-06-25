@@ -20,9 +20,12 @@ class Audit(object):
         app.logger.info('Audit start %s' % stamp)
         app.logger.info('Message: %s' % message)
         app.logger.info('Status code: %s' % status)
-        difference = self.__diff(json_data, last)
-        if difference:
-            app.logger.info('Diff: \n%s' % difference)
+
+# TODO diff doesn't make sense for how systemofrecord currently works,
+# because 'last' isn't necessarily related to the current title.
+#        difference = self.__diff(json_data, last)
+#        if difference:
+#            app.logger.info('Diff: \n%s' % difference)
         for key, value in kwargs.iteritems():
             app.logger.info("%s = %s" % (key, value))
         app.logger.info('Audit end %s' % stamp)
@@ -34,7 +37,7 @@ class Audit(object):
         """
         title_number = json_data['title_number']
         if last:
-            last_title = last[title_number]['title']
+            last_title = last['title']
             difference = diff(last_title, json_data)
             return str(difference)
         else:

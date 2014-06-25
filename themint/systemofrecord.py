@@ -9,10 +9,7 @@ class SystemOfRecord(object):
 
     def get(self):
         response = requests.get(self.api)
-        try:
-            return json.dumps(response.json())
-        except ValueError as e:
-            return None
+        return response
 
     def put(self, signed_json_data):
         """payload requires sha256 and public key, although
