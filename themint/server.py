@@ -26,8 +26,6 @@ def post():
 
     r = mint.create(payload)
 
-
-
     if request.headers['Content-Type'] == 'application/x-www-form-urlencoded':
         return redirect("/titles", code=302)
     else:

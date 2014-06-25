@@ -39,6 +39,7 @@ class Mint(object):
             last_resp = self.db.get()
             try:
                 last = last_resp.json()
+                json_data['previous_sha256'] = last['sha256']
             except ValueError:
                 pass
 
