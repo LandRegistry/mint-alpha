@@ -3,4 +3,5 @@
 static/build
 static/.webassets-cache
 dev/
-*.log
+*.log.*
+audit.log
