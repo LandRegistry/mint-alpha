@@ -5,13 +5,13 @@ install:
 - pip install -r requirements.txt
 - pip install pytest
 script: py.test
-#deploy:
-#  provider: heroku
-#  buildpack: python
-#  api_key:
-#    secure: SVOkDnBfcAr/Ok+LhW5msYsLD6cSYe+3C4x3A2Wjr8vhJQ1HW17P+fffWlP28LWuTYodrOJleAQ9B0upOypb5PvbfxHh1lEDO+OK1eZbhhp3JO08seDrYd1kv5e9chsXMD0hfxsZUL54czvy+Yb6V5cFOdMu/d2uXutndg+ohh4=
-#  strategy: git
-#  app: lr-mint
-#  on:
-#    repo: LandRegistry/mint
-#    branch: master
+deploy:
+  provider: heroku
+  buildpack: python
+  api_key:
+    secure: TetTLz4NydL3/wgDYVCpJVm4CUUZYTBterJu06u+adBpuDql5fFENyeeUpDMMNjori/CeFa8HozdWCwXTlB18Na7O1t7304BFbOySVnTUnCcDT7ykU5UyNg3wbacg9jXzLxTGWwmdquPulZKmYa6/R5XPmGkjCAvzq7fzKKdmDE=
+  strategy: git
+  app: lr-mint
+  on:
+    repo: LandRegistry/mint
+    branch: master
