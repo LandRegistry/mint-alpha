@@ -1,3 +1,6 @@
+# Mint
+
+[![Build Status](https://travis-ci.org/LandRegistry/mint.svg)](https://travis-ci.org/LandRegistry/mint)
 
 # What?
 
