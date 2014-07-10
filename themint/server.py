@@ -8,13 +8,20 @@ from themint import app
 db = SystemOfRecord(app.config)
 mint = Mint(db)
 
+
+@app.route('/', methods=['GET'])
+def index():
+    return "OK"
+
+
 @app.route('/titles', methods=['GET'])
 @app.route('/titles/<number>', methods=['GET'])
 @pushrod_view(jinja_template='titles.html')
 def get(number=None):
     # TODO /titles/<number> on systemofrecord was removed
     titles = db.get()
-    return {"titles" : [titles] }
+    return {"titles": [titles]}
+
 
 @app.route('/titles', methods=['POST'])
 def post():
@@ -22,7 +29,7 @@ def post():
     if request.headers['Content-Type'] == 'application/x-www-form-urlencoded':
         payload = json.loads(request.form['payload'])
     else:
-        payload = request.json # this has the payload, id, etc
+        payload = request.json
 
     r = mint.create(payload)
 
