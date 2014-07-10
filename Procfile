@@ -1,1 +1,1 @@
-web: gunicorn -b 0.0.0.0:5001 -k eventlet themint.server:app
+web: gunicorn -b 0.0.0.0:$PORT -k eventlet themint.server:app
