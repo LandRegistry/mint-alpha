@@ -1,5 +1,5 @@
 #!/bin/bash
-
-export SYSTEMOFRECORD_URL=http://0.0.0.0:5001
+export SETTINGS='config.DevelopmentConfig'
+export SYSTEMOFRECORD_URL=http://0.0.0.0:8000
 
 foreman start
