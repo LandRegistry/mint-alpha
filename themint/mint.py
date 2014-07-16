@@ -66,8 +66,22 @@ class Mint(object):
             "public_key" : str(self.public_key),
             "created_ts" : unixts()
         }
-        self.command.put(signed)
+        response = self.command.put(signed)
 
         # TODO gauranteed delivery? Response code?
-        self.audit.log('Message sent to system-of-record queue', 200, json_data, last)
+        if not response:
+            # TODO return a meaningful response, although this is fire and forget
+            response = Response('Payload queued to system-of-record', 200)
+        else:
+            response = Response(response.text, response.status_code)
 
+        print "RESPONSE", response
+        self.audit.log(response.text, response.status_code, json_data, last)
+        return response
+
+
+class Response(object):
+
+    def __init__(self, text, code):
+        self.text = text
+        self.status_code = code

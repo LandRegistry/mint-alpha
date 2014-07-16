@@ -14,6 +14,5 @@ def index():
 @app.route('/titles', methods=['POST'])
 def post():
     payload = request.json
-    mint.create(payload)
-    # TODO the casework client will generate a unique title, which can be used to check the feeder for success
-    return "Payload queued to system-of-record", 200
+    r = mint.create(payload)
+    return r.text, r.status_code
