@@ -5,12 +5,20 @@ import random
 import json
 from themint import app
 from .audit import Audit
+from .systemofrecord_command import SystemOfRecordCommand
+from .systemofrecord_query import SystemOfRecordQuery
+
 
 class Mint(object):
+    """
+    Talks to system-of-record by way of commands and queries.
+    See http://martinfowler.com/bliki/CQRS.html
+    """
 
-    def __init__(self, db, public_key = None, private_key = None):
-        self.db = db
-        self.audit = Audit(app.config, db)
+    def __init__(self, public_key = None, private_key = None):
+        self.command = SystemOfRecordCommand()
+        self.query = SystemOfRecordQuery()
+        self.audit = Audit(app.config)
         if public_key and private_key:
             self.public_key, self.private_key = load_keys(public_key, private_key)
         else:
@@ -36,7 +44,7 @@ class Mint(object):
             json_data['previous_sha256'] = previous_hash
         else:
             # get the sha256_hash of the previous entry
-            last_resp = self.db.get()
+            last_resp = self.query.get_last()
             try:
                 last = last_resp.json()
                 json_data['previous_sha256'] = last['sha256']
@@ -58,8 +66,8 @@ class Mint(object):
             "public_key" : str(self.public_key),
             "created_ts" : unixts()
         }
-        resp = self.db.put(signed)
+        self.command.put(signed)
 
-        self.audit.log(resp.text, resp.status_code, json_data, last)
+        # TODO gauranteed delivery? Response code?
+        self.audit.log('Message sent to system-of-record queue', 200, json_data, last)
 
-        return resp

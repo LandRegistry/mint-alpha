@@ -5,35 +5,16 @@ from .systemofrecord import SystemOfRecord
 from .mint import Mint
 from themint import app
 
-db = SystemOfRecord(app.config)
-mint = Mint(db)
+mint = Mint()
 
 
 @app.route('/', methods=['GET'])
 def index():
-    return "OK"
-
-
-@app.route('/titles', methods=['GET'])
-@app.route('/titles/<number>', methods=['GET'])
-@pushrod_view(jinja_template='titles.html')
-def get(number=None):
-    # TODO /titles/<number> on systemofrecord was removed
-    titles = db.get()
-    return {"titles": [titles]}
-
+    return "Mint OK"
 
 @app.route('/titles', methods=['POST'])
 def post():
-    payload = {}
-    if request.headers['Content-Type'] == 'application/x-www-form-urlencoded':
-        payload = json.loads(request.form['payload'])
-    else:
-        payload = request.json
-
-    r = mint.create(payload)
-
-    if request.headers['Content-Type'] == 'application/x-www-form-urlencoded':
-        return redirect("/titles", code=302)
-    else:
-        return r.text, r.status_code
+    payload = request.json
+    mint.create(payload)
+    # TODO the casework client will generate a unique title, which can be used to check the feeder for success
+    return "Payload queued to system-of-record", 200

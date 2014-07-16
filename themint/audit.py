@@ -8,12 +8,11 @@ import pickle
 
 class Audit(object):
 
-    def __init__(self, config, db):
+    def __init__(self, config):
         # TODO proxy an audit service here. For now, just log to a file.
         handler = RotatingFileHandler('audit.log', maxBytes=10000, backupCount=1)
         handler.setLevel(logging.INFO)
         app.logger.addHandler(handler)
-        self.db = db
 
     def log(self, message, status, json_data, last, **kwargs):
         stamp = unixts()
