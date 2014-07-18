@@ -2,7 +2,6 @@ from Crypto.Hash import SHA256
 from .utils import load_keys, create_keys, sha256_sum, unixts
 import string
 import random
-import json
 from themint import app
 from .audit import Audit
 from .systemofrecord_command import SystemOfRecordCommand
@@ -54,6 +53,8 @@ class Mint(object):
         # TODO canonicalise the payload
         canonical_json = str(json_data)
 
+        app.logger.info("Recieved the following json %s" % json_data)
+
         # sign the payload
         sha_sum = sha256_sum(canonical_json)
 
@@ -66,6 +67,8 @@ class Mint(object):
             "public_key" : str(self.public_key),
             "created_ts" : unixts()
         }
+
+        app.logger.info("Submitting %s to the system or record" % signed)
         response = self.command.put(signed)
 
         # TODO gauranteed delivery? Response code?
@@ -75,7 +78,7 @@ class Mint(object):
         else:
             response = Response(response.text, response.status_code)
 
-        print "RESPONSE", response
+        app.logger.info( "Response: %s" % response)
         self.audit.log(response.text, response.status_code, json_data, last)
         return response
 

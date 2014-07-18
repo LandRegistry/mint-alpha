@@ -11,7 +11,7 @@ class SystemOfRecordCommand(object):
     def __init__(self):
         self.redis = Redis.from_url(app.config.get('REDIS_URL'))
         self.ns = app.config.get('REDIS_NS_QUEUE_MINT')
-        endpoint = "/titles"
+        endpoint = "/title"
         self.api = app.config.get('SYSTEMOFRECORD_URL') + endpoint
 
     def put(self, signed_json_data):
@@ -25,5 +25,7 @@ class SystemOfRecordCommand(object):
         else:
             headers = { "Content-Type" : "application/json"}
             data = json.dumps(signed_json_data)
-            response = requests.post(self.api + '/' + signed_json_data['title_number'], data=data, headers=headers)
+            app.logger.info("Posting data %s to system or record at %s")
+            title_url = '%s/%s' % (self.api, signed_json_data['title_number'])
+            response = requests.post(title_url, data=data, headers=headers)
             return response
