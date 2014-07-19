@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, make_response
 from .mint import Mint
 from themint import app
 
@@ -13,4 +13,4 @@ def post(title_number):
     app.logger.info("Recieved title number %s to mint new record with json %s" % (title_number, request.json))
     r = mint.create(request.json)
     app.logger.info("Response status code %s" % r.status_code)
-    return r.text, r.status_code
+    return make_response(r.text, r.status_code)
