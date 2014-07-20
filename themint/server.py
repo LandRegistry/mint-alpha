@@ -8,7 +8,7 @@ mint = Mint()
 def index():
     return "Mint OK"
 
-@app.route('/title/<title_number>', methods=['POST'])
+@app.route('/titles/<title_number>', methods=['POST'])
 def post(title_number):
     app.logger.info("Recieved title number %s to mint new record with json %s" % (title_number, request.json))
     r = mint.create(request.json)
