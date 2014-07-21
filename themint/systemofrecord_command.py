@@ -26,7 +26,7 @@ class SystemOfRecordCommand(object):
         else:
             headers = { "Content-Type" : "application/json"}
             data = json.dumps(signed_json_data)
-            app.logger.info("Posting data %s to system or record at %s")
             title_url = '%s/%s' % (self.api, signed_json_data['title_number'])
+            app.logger.info("Posting data %s to system or record at %s" %(data, title_url))
             response = requests.put(title_url, data=data, headers=headers)
             return response
