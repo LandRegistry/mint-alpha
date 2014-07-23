@@ -39,6 +39,8 @@ class Mint(object):
 
         # reference to previous hash, if it exists
         last = None
+        # /titles/last was removed from sysofrec. Short-circuit this for now.
+        previous_hash = 'cafebabe'
         if previous_hash:
             json_data['previous_sha256'] = previous_hash
         else:

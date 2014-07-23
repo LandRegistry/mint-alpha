@@ -18,4 +18,4 @@ class TestConfig(DevelopmentConfig):
 class DockerConfig(Config):
     DEBUG = True
     SYSTEMOFRECORD_URL = os.environ.get('SYSTEMOFRECORD_1_PORT_8000_TCP', '').replace('tcp://', 'http://')
-    REDIS_URL = os.environ.get('REDIS_1_PORT_6379_TCP', '').replace('tcp://', 'http://')
+    REDIS_URL = os.environ.get('REDIS_1_PORT_6379_TCP', '').replace('tcp://', 'redis://')
