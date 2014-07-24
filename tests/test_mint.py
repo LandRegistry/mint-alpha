@@ -3,24 +3,29 @@ from themint.mint import Response
 import unittest
 import json
 import mock
-
+import os
 
 class MintTestCase(unittest.TestCase):
 
     def setUp(self):
         server.app.config['TESTING'] = True
         self.app = server.app.test_client()
+    
+    def test_server(self):
+        rv = self.app.get('/')
+        assert rv.status == '200 OK'
 
-    @mock.patch("themint.mint.Mint.create")
-    def test_search(self, mock_create):
-        title_number = 'DN100'
-        data = json.dumps({'foo':'bar', 'title_number':title_number})
+    def test_get_not_allowed(self):
+        rv = self.app.get('/titles/DN1234')
+        assert rv.status == '405 METHOD NOT ALLOWED'
+
+    @mock.patch("themint.systemofrecord_command.SystemOfRecordCommand.put")
+    def test_create(self, mock_create):
 
         mock_create.return_value = Response('success', 200)
 
-        self.app.post(
-            '/titles/' + title_number,
-            data=data,
-            content_type='application/json')
+        path = os.path.dirname(os.path.realpath(__file__))
+        data = open('%s/data/create_title.json' % path, 'r').read()
 
-        mock_create.assert_called_with(json.loads(data))
+        rv = self.app.post('/titles/DN1234', data=data, content_type='application/json')
+        assert rv.status  == '200 OK'
