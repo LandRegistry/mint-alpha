@@ -5,3 +5,5 @@ static/.webassets-cache
 dev/
 *.log.*
 audit.log
+htmlcov
+.coverage
