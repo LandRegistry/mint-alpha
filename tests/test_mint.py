@@ -9,6 +9,7 @@ class MintTestCase(unittest.TestCase):
 
     def setUp(self):
         server.app.config['TESTING'] = True
+
         self.app = server.app.test_client()
     
     def test_server(self):
@@ -29,3 +30,7 @@ class MintTestCase(unittest.TestCase):
 
         rv = self.app.post('/titles/DN1234', data=data, content_type='application/json')
         assert rv.status  == '200 OK'
+
+    def test_health(self):
+        response = self.app.get('/health')
+        assert response.status == '200 OK'

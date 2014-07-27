@@ -84,6 +84,8 @@ class Mint(object):
         self.audit.log(response.text, response.status_code, json_data, last)
         return response
 
+    def health(self):
+        return self.command.health()
 
 class Response(object):
 
