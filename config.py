@@ -12,8 +12,8 @@ class DevelopmentConfig(Config):
 class TestConfig(DevelopmentConfig):
     TESTING = True
     SYSTEMOFRECORD_URL = ''
-    REDIS_URL = ''
-    REDIS_NS_QUEUE_MINT = ''
+    REDIS_URL = 'redis://rediscloud:aD45jy220LqB3jBf@pub-redis-17503.eu-west-1-1.1.ec2.garantiadata.com:17503'
+    REDIS_NS_QUEUE_MINT = 'test:lr:queue:mint'
 
 class DockerConfig(Config):
     DEBUG = True

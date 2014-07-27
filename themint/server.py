@@ -1,8 +1,10 @@
 from flask import request, make_response
 from .mint import Mint
 from themint import app
+from .health import Health
 
 mint = Mint()
+Health(app, checks=[mint.health])
 
 @app.route('/', methods=['GET'])
 def index():

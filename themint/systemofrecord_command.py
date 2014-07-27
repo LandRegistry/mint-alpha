@@ -30,3 +30,10 @@ class SystemOfRecordCommand(object):
             app.logger.info("Posting data %s to system or record at %s" %(data, title_url))
             response = requests.put(title_url, data=data, headers=headers)
             return response
+
+    def health(self):
+        try:
+            self.redis.info()
+            return True, "Redis"
+        except:
+            return False, "Redis"
