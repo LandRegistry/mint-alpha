@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/LandRegistry/mint.svg)](https://travis-ci.org/LandRegistry/mint)
 
+[![Coverage Status](https://img.shields.io/coveralls/LandRegistry/mint.svg)](https://coveralls.io/r/LandRegistry/mint)
+
 # What?
 
 Service to create new versions of a title, hashed and signed.
