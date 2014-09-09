@@ -5,10 +5,9 @@ import os
 import json
 import requests
 
-#TODO - add error handling
+# TODO - add error handling
 
 class SystemOfRecordCommand(object):
-
     def __init__(self):
         self.redis = Redis.from_url(app.config.get('REDIS_URL'))
         self.ns = app.config.get('REDIS_NS_QUEUE_MINT')
@@ -24,10 +23,10 @@ class SystemOfRecordCommand(object):
             self.redis.rpush(self.ns, pickled)
             return None
         else:
-            headers = { "Content-Type" : "application/json"}
+            headers = {"Content-Type": "application/json"}
             data = json.dumps(signed_json_data)
             title_url = '%s/%s' % (self.api, signed_json_data['title_number'])
-            app.logger.info("Posting data %s to system or record at %s" %(data, title_url))
+            app.logger.info("Posting data %s to system or record at %s" % (data, title_url))
             response = requests.put(title_url, data=data, headers=headers)
             return response
 
@@ -35,5 +34,6 @@ class SystemOfRecordCommand(object):
         try:
             self.redis.info()
             return True, "Redis"
-        except:
+        except Exception as e:
+            app.logger.error("Exception in health check from redis: %s", repr(e))
             return False, "Redis"

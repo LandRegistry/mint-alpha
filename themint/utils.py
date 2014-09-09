@@ -6,21 +6,20 @@ import json
 import calendar
 import datetime
 
-def alphabetically_sorted_dict(d):
-    """
-    Returns a dictionary with all keys recursively sorted alphabetically
-    """
-    ordered = OrderedDict()
-    for k, v in sorted(d.items()):
-        if isinstance(v, dict):
-            ordered[k] = alphabetically_sorted_dict(v)
-        else:
-            ordered[k] = v
-    return ordered
 
-def canonical_json(d):
+def canonical_json(dictionary):
+    def alphabetically_sorted_dict(d):
+        ordered = OrderedDict()
+
+        for k, v in sorted(d.items()):
+            if isinstance(v, dict):
+                ordered[k] = alphabetically_sorted_dict(v)
+            else:
+                ordered[k] = v
+        return ordered
+
     return json.dumps(
-        alphabetically_sorted_dict(d),
+        alphabetically_sorted_dict(dictionary),
         separators=(',', ':')
     )
 
@@ -28,7 +27,7 @@ def canonical_json(d):
 def create_keys():
     random_generator = Random.new().read
     key = RSA.generate(1024, random_generator)
-    return (key.publickey().exportKey(), key)
+    return key.publickey().exportKey(), key
 
 
 def sha256_sum(data):
@@ -42,7 +41,9 @@ def load_keys(public_file, private_file):
     key_file = open(private_file, 'rb')
     private_key = RSA.importKey(key_file)
     key_file.close()
-    return (public_key, private_key)
+
+    return public_key, private_key
+
 
 def unixts():
     return calendar.timegm(datetime.datetime.utcnow().timetuple())
