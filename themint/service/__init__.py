@@ -1,5 +1,4 @@
 from themint.service.system_of_record_write_interface import SystemOfRecordWriteInterface
 from themint.service.mint_message_service import MintMessageService
 
-system_of_record_write_interface = SystemOfRecordWriteInterface()
-mint_message_service = MintMessageService()
+message_service = MintMessageService(SystemOfRecordWriteInterface())

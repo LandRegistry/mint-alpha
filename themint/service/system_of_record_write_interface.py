@@ -1,8 +1,5 @@
 import cPickle as pickle
 from redis import Redis
-import os
-import json
-import requests
 
 from themint import app
 
@@ -17,17 +14,8 @@ class SystemOfRecordWriteInterface(object):
         self.api = app.config.get('SYSTEMOFRECORD_URL') + endpoint
 
     def send_to_system_of_record(self, message):
-        if 'USE_QUEUE' in os.environ:
-            pickled = pickle.dumps(message)
-            self.redis.rpush(self.ns, pickled)
-            return None
-        else:
-            headers = {"Content-Type": "application/json"}
-            data = json.dumps(message)
-            title_url = '%s/%s' % (self.api, message['title_number'])
-            app.logger.info("Posting data %s to system or record at %s" % (data, title_url))
-            response = requests.put(title_url, data=data, headers=headers)
-            return response
+        pickled = pickle.dumps(message)
+        self.redis.rpush(self.ns, pickled)
 
     def health(self):
         try:

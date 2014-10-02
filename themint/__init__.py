@@ -20,5 +20,5 @@ if 'SENTRY_DSN' in os.environ:
 
 app.logger.info(app.config)
 
-from themint.service import system_of_record_write_interface
-Health(app, checks=[system_of_record_write_interface.health])
+from themint.service import message_service
+Health(app, checks=[message_service.health])
