@@ -3,7 +3,7 @@ import mock
 import os
 
 from themint import server
-from themint.mint import Response
+from themint.service.mint_message_service import Response
 
 
 class MintTestCase(unittest.TestCase):

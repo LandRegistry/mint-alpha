@@ -1,9 +1,13 @@
-import os, sys
+import os
 from flask import Flask
 import logging
-from flask.ext.basicauth import BasicAuth
 from flask.ext.pushrod import Pushrod
 from raven.contrib.flask import Sentry
+
+from themint.service import system_of_record_write_interface
+
+from themint.health import Health
+
 
 app = Flask(__name__)
 Pushrod(app)
@@ -17,7 +21,6 @@ if not app.debug:
 if 'SENTRY_DSN' in os.environ:
     sentry = Sentry(app, dsn=os.environ['SENTRY_DSN'])
 
-app.logger.info( "============")
 app.logger.info(app.config)
-app.logger.debug(app.debug)
-app.logger.info("============")
+
+Health(app, checks=[system_of_record_write_interface.health])
