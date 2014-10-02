@@ -1,19 +1,22 @@
 from themint import app
 from themint.audit import Audit
 from themint.service import system_of_record_write_interface
+from themint.utils import unixts
 
 
 class MintMessageService(object):
     def __init__(self):
-        self.audit = Audit(app.config)
+        self.audit = Audit()
 
     def wrap_message_for_system_of_record(self, message):
         signed = {
-            "title": message,
-            "title_number": message['title_number'],
-            "sha256": str(encrypted_sum[0]),
-            "public_key": str(self.public_key),
-            "created_ts": unixts()
+            "data": message,
+            "object_id": message['title_number'],
+            "initial_request_timestamp": unixts()
+            # optional:
+            # created_by
+            # reason_for_change
+            # chains  [ chain_name, chain_value ]
         }
 
         app.logger.info("Submitting %s to the system or record" % signed)

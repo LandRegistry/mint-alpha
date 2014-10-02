@@ -1,16 +1,13 @@
 import os
 from flask import Flask
 import logging
-from flask.ext.pushrod import Pushrod
 from raven.contrib.flask import Sentry
 
-from themint.service import system_of_record_write_interface
 
 from themint.health import Health
 
 
 app = Flask(__name__)
-Pushrod(app)
 
 app.config.from_object(os.environ.get('SETTINGS'))
 
@@ -23,4 +20,5 @@ if 'SENTRY_DSN' in os.environ:
 
 app.logger.info(app.config)
 
+from themint.service import system_of_record_write_interface
 Health(app, checks=[system_of_record_write_interface.health])
