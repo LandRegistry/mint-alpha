@@ -1,12 +1,13 @@
-import os, sys
+import os
 from flask import Flask
 import logging
-from flask.ext.basicauth import BasicAuth
-from flask.ext.pushrod import Pushrod
 from raven.contrib.flask import Sentry
 
+
+from themint.health import Health
+
+
 app = Flask(__name__)
-Pushrod(app)
 
 app.config.from_object(os.environ.get('SETTINGS'))
 
@@ -17,7 +18,7 @@ if not app.debug:
 if 'SENTRY_DSN' in os.environ:
     sentry = Sentry(app, dsn=os.environ['SENTRY_DSN'])
 
-app.logger.info( "============")
 app.logger.info(app.config)
-app.logger.debug(app.debug)
-app.logger.info("============")
+
+from themint.service import message_service
+Health(app, checks=[message_service.health])
