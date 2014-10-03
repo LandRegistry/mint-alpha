@@ -1,7 +1,7 @@
 from themint import app
 from themint.utils import unixts
 from datatypes import system_of_record_request_validator
-from datatypes.core import str_to_uni_dict
+from datatypes.core import unicoded
 import json
 
 class MintMessageService(object):
@@ -9,7 +9,7 @@ class MintMessageService(object):
         self.writer = writer
 
     def wrap_message_for_system_of_record(self, message):
-        signed = str_to_uni_dict({
+        signed = unicoded({
             'object' : {
                 "data": json.dumps(message),
                 "object_id": message['title_number'],
