@@ -1,9 +1,7 @@
 import unittest
 import mock
-import os
 
 from themint import server
-from themint.service.mint_message_service import Response
 
 
 class MintTestCase(unittest.TestCase):
@@ -16,15 +14,6 @@ class MintTestCase(unittest.TestCase):
 
     def test_get_not_allowed(self):
         self.assertEqual((self.app.get('/titles/DN1234')).status, '405 METHOD NOT ALLOWED')
-
-    @mock.patch("themint.systemofrecord_command.SystemOfRecordCommand.put")
-    def test_create(self, mock_create):
-        mock_create.return_value = Response('success', 200)
-
-        path = os.path.dirname(os.path.realpath(__file__))
-        data = open('%s/data/create_title.json' % path, 'r').read()
-
-        self.assertEqual((self.app.post('/titles/DN1234', data=data, content_type='application/json')).status, '200 OK')
 
     @mock.patch('redis.Redis.info')
     def test_health(self, mock_info):
