@@ -4,7 +4,8 @@ from themint import app
 from themint.utils import unixts
 from datatypes import system_of_record_request_validator
 from datatypes.core import unicoded
-
+import base64
+import json
 
 class MintMessageService(object):
     def __init__(self, writer):
@@ -12,8 +13,8 @@ class MintMessageService(object):
 
     def wrap_message_for_system_of_record(self, message):
         signed = unicoded({
-            'object': {
-                "data": json.dumps(message),
+            'object' : {
+                "data": base64.b64encode(json.dumps(message)),
                 "object_id": message['title_number'],
                 "initial_request_timestamp": unixts(),
                 "chains": [
