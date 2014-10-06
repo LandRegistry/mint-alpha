@@ -1,8 +1,10 @@
+import json
+
 from themint import app
 from themint.utils import unixts
 from datatypes import system_of_record_request_validator
 from datatypes.core import unicoded
-import json
+
 
 class MintMessageService(object):
     def __init__(self, writer):
@@ -10,14 +12,23 @@ class MintMessageService(object):
 
     def wrap_message_for_system_of_record(self, message):
         signed = unicoded({
-            'object' : {
+            'object': {
                 "data": json.dumps(message),
                 "object_id": message['title_number'],
-                "initial_request_timestamp": unixts()
+                "initial_request_timestamp": unixts(),
+                "chains": [
+                    {
+                        "chain_name": "type",
+                        "chain_value": "title"
+                    },
+                    {
+                        "chain_name": "history",
+                        "chain_value": message["title_number"]
+                    }
+                ]
                 # optional:
                 # created_by
                 # reason_for_change
-                # chains  [ chain_name, chain_value ]
             }
         })
 
