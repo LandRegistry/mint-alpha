@@ -9,12 +9,13 @@ def index():
     return "Mint OK"
 
 
+# TODO remove <title_number> below, as it is not used.
 @app.route('/titles/<title_number>', methods=['POST'])
 def post(title_number):
-    app.logger.info("Received title number [%s] to mint new record with json: %s" % (title_number, request.json))
     try:
         message_service.wrap_message_for_system_of_record(request.json)
 
+        app.logger.info("Minting new title with payload %s" % (request.json))
         return make_response(
             json.dumps({
                 'message': 'OK',
