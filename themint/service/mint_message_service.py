@@ -2,16 +2,21 @@ import json
 
 from themint import app
 from themint.utils import unixts
-from datatypes import system_of_record_request_validator
+from datatypes import (
+        system_of_record_request_validator,
+        title_validator)
 from datatypes.core import unicoded
 import base64
-import json
 
 class MintMessageService(object):
     def __init__(self, writer):
         self.writer = writer
 
     def wrap_message_for_system_of_record(self, message):
+        # validate the message
+        title_validator.validate(message)
+
+        # put the message in an envelope
         signed = unicoded({
             'object' : {
                 "data": base64.b64encode(json.dumps(message)),
@@ -33,6 +38,7 @@ class MintMessageService(object):
             }
         })
 
+        # validate the envelope
         system_of_record_request_validator.validate(signed)
 
         app.logger.info("Submitting %s to the system or record" % signed)
