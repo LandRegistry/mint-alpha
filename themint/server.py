@@ -22,7 +22,7 @@ def post(title_number):
             }),
             201)
     except Exception as e:
-        app.logger.error('Error when minting new: %s' % e)
+        app.logger.error('Error when minting new', exc_info=e)
         return make_response(
             json.dumps({
                 'message': 'Error',
