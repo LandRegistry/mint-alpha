@@ -4,6 +4,8 @@ import json
 from themint import app
 from themint.service import message_service
 
+from datatypes.exceptions import DataDoesNotMatchSchemaException
+
 @app.route('/', methods=['GET'])
 def index():
     return "Mint OK"
@@ -19,9 +21,17 @@ def post(title_number):
         return make_response(
             json.dumps({
                 'message': 'OK',
-                'status_code': 201 
+                'status_code': 201
             }),
             201)
+
+    except DataDoesNotMatchSchemaException as e:
+        app.logger.error('Validation error with data sent to mint %s' % e.field_errors)
+        return make_response(
+            json.dumps({
+                'error': e.field_errors
+            }), 400)
+
     except Exception as e:
         app.logger.error('Error when minting new', exc_info=e)
         return make_response(
