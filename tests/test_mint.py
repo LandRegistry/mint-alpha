@@ -1,11 +1,9 @@
 import unittest
 import mock
 import requests
-from themint import app
 import json
 
 from themint import server
-from datatypes.exceptions import DataDoesNotMatchSchemaException
 
 
 class MintTestCase(unittest.TestCase):
@@ -29,10 +27,18 @@ class MintTestCase(unittest.TestCase):
         res = self.post_to_mint(data)
         self.assertEqual(res.status, '400 BAD REQUEST')
 
+    def test_400_upon_unknown_error(self):
+        #validation fails because an integer passed which can't be iterated over
+        #Ideally response json should be checked here to ensure it contains 'Error when minting new'
+        data = 1
+        res = self.post_to_mint(data)
+        self.assertEqual(res.status, '400 BAD REQUEST')
+
     def test_for_correct_response_upon_successful_post(self):
         response = requests.get("https://raw.githubusercontent.com/LandRegistry/generate-test-data/master/sample_titles/title-full.json")
         data = response.json()
         self.assertEqual(self.post_to_mint(data).status, '201 CREATED')
+
 
     @mock.patch('redis.Redis.info')
     def test_health(self, mock_info):

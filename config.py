@@ -11,6 +11,9 @@ class DevelopmentConfig(Config):
 
 class TestConfig(DevelopmentConfig):
     TESTING = True
+    SYSTEMOFRECORD_URL = ''
+    REDIS_URL = ''
+    REDIS_NS_QUEUE_MINT = ''
 
 class DockerConfig(Config):
     DEBUG = True
