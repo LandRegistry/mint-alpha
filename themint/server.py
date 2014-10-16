@@ -17,7 +17,7 @@ def post(title_number):
     try:
         message_service.wrap_message_for_system_of_record(request.json)
 
-        app.logger.info("Minting new title with payload %s" % (request.json))
+        #app.logger.debug("Minting new title with payload %s" % (request.json))
         return make_response(
             json.dumps({
                 'message': 'OK',
