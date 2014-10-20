@@ -18,7 +18,7 @@ if not app.debug:
 if 'SENTRY_DSN' in os.environ:
     sentry = Sentry(app, dsn=os.environ['SENTRY_DSN'])
 
-app.logger.info(app.config)
+app.logger.debug(app.config)
 
 from themint.service import message_service
 Health(app, checks=[message_service.health])
