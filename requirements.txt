@@ -3,16 +3,16 @@ Flask-BasicAuth==0.2.0
 Jinja2==2.7.3
 MarkupSafe==0.23
 Werkzeug==0.9.6
-eventlet==0.14.0
-greenlet==0.4.2
-gunicorn==18.0
+eventlet==0.15.2
+greenlet==0.4.5
+gunicorn==19.1.1
 itsdangerous==0.24
 pycrypto==2.6.1
 wsgiref==0.1.2
-requests==2.3.0
-datadiff==1.1.5
-redis==2.10.1
+requests==2.4.3
+datadiff==1.1.6
+redis==2.10.3
 -e git+https://github.com/Runscope/healthcheck.git@9d661a916f3ab630ae21e014758aa2f21fd40097#egg=healthcheck
 -e git+https://github.com/LandRegistry/datatypes#egg=datatypes
-raven==5.0.0
+raven==5.1.1
 blinker==1.3
