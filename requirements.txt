@@ -12,7 +12,7 @@ wsgiref==0.1.2
 requests==2.4.3
 datadiff==1.1.6
 redis==2.10.3
+lrdatatypes==0.1
 -e git+https://github.com/Runscope/healthcheck.git@9d661a916f3ab630ae21e014758aa2f21fd40097#egg=healthcheck
--e git+https://github.com/LandRegistry/datatypes#egg=datatypes
 raven==5.1.1
 blinker==1.3
