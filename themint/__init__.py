@@ -3,13 +3,14 @@ from flask import Flask
 import logging
 from raven.contrib.flask import Sentry
 
-
 from themint.health import Health
-
 
 app = Flask(__name__)
 
 app.config.from_object(os.environ.get('SETTINGS'))
+
+from werkzeug.contrib.fixers import ProxyFix
+app.wsgi_app = ProxyFix(app.wsgi_app)
 
 if not app.debug:
     app.logger.addHandler(logging.StreamHandler())
