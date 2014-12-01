@@ -8,62 +8,40 @@
 
 Service to create new versions of a title, hashed and signed.
 
-Takes a document of the form:
+Takes a document in this form:
 
-    {
-        "address": "1 low street",
-        "title_number": "TN1234567",
-        "previous_sha256" : "<excluded for v1 of title>"
-        /* ... */
-    }
-
-...signs it with a private key, and turns it into:
-
-    {
-        "title" : {
-            "address": "1 low street",
-            "title_number": "TN1234567",
-            "previous_sha256" : "<excluded for v1 of title>"
-             /* ... */
-        },
-        "sha256": "<the hash of canonicalised .title field above>",
-        "public_key": "<key or link to key>"
-    }
+https://raw.githubusercontent.com/LandRegistry/migration-emitter/master/samples/BD161871.json
 
 ...before posting it to the [System Of Record](https://github.com/landregistry/system-of-record).
 
+
+#Dependencies:
+
+- System of record service - https://github.com/LandRegistry/system-of-record
+
+- A Redis queue.  Redis needs to be installed and a queue setup to store the messages.  See
+  the environment.sh file for the name of the queue.
+
+- Python modules listed here: https://github.com/LandRegistry/mint/blob/master/requirements.txt
+
+
 # Get started
+
+Install the python modules within requirements.txt.  Recommend doing this in a virtual environment.  If pip is
+installed, you can type "pip install -r requirements.txt"
 
 Run the server
 
-    ./manage.py runserver
+```
+    ./run_dev.sh
+```
 
-Post a title
+#Test that it works
 
-    curl -X POST -H 'Content-Type: application/json' http://0.0.0.0:5000/entries \
-        -d '{
-        "address": "1 low street",
-        "title_number": "TN1234567",
-        "previous_sha256" : "<excluded for v1 of title>"
-        }'
-
-Check that the title has been successfully added:
-
-    curl http://0.0.0.0:5000/entries
-
-Post an update to the title, e.g. new ownership:
-
-    curl -X POST -H 'Content-Type: application/json' http://0.0.0.0:5000/entries \
-        -d '{
-        "owner": "the name of the new owner"
-        "address": "1 low street",
-        "title_number": "TN1234567",
-        "previous_sha256" : "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-        }'
-
-Verify the new entry:
-
-    curl http://0.0.0.0:5000/entries
+```
+    python test_post_to_mint.py
+```
+This fires a quick get to test the service is there, then posts a test title.
 
 
 # Audit
