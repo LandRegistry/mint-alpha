@@ -1,0 +1,16 @@
+{
+  "name": "mint",
+  "type": "back-end",
+  "github": "https://github.com/LandRegistry/mint",
+  "heroku": "lr-mint",
+  "url": "http://lr-mint.herokuapp.com/",
+  "port": 8001,
+  "database": "false",
+  "tech": [
+    "python",
+    "flask"
+  ],
+  "dependencies": [
+    "system-of-record"
+  ]
+}
